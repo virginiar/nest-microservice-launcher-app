@@ -11,6 +11,7 @@ services:
   # Client gateway
   client-gateway:
     container_name: client-gateway
+    restart: on-failure
     build: ./client-gateway
     ports:
       - ${CLIENT_GATEWAY_PORT}:3000
@@ -65,6 +66,7 @@ services:
   # Payments MS
   payments-ms:
     container_name: payments-ms
+    restart: on-failure
     build: ./payments-ms
     volumes:
       - ./payments-ms/src:/usr/src/app/src
