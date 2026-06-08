@@ -19,6 +19,8 @@ Basado en el curso de "NestJs + Microservicios: Aplicaciones escalables y modula
 $ git submodule update --init --recursive
 ```
 
+Nota: No es necesario si se clona con ```git clone --recursive``` 
+
 4. Crear el endpoint local de Hookdeck
 
 ```bash
