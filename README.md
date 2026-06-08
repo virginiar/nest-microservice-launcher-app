@@ -19,7 +19,15 @@ Basado en el curso de "NestJs + Microservicios: Aplicaciones escalables y modula
 $ git submodule update --init --recursive
 ```
 
-4. Crear los contenedores Docker
+4. Crear el endpoint local de Hookdeck
+
+```bash
+$ npm install hookdeck-cli -g
+$ hookdeck login
+$ hookdeck listen 3003 stripe --path /payments/webhook
+```
+
+5. Crear los contenedores Docker
 
 ```bash
 $ docker compose up --build
