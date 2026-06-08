@@ -22,61 +22,73 @@ services:
       - PORT=${CLIENT_GATEWAY_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
 
-  # Products MS
-  products-ms:
-    container_name: products-ms
-    build: ./products-ms
-    volumes:
-      - ./products-ms/src:/usr/src/app/src
-    command: npm run start:docker
-    environment:
-      - PORT=${PRODUCTS_MS_PORT}
-      - NATS_SERVERS=${NATS_SERVERS}
-      - DATABASE_URL=${PRODUCTS_DATABASE_URL}
-  
-  # Orders MS
-  orders-ms:
-    container_name: orders-ms
+  # Auth MS
+  auth-ms:
+    container_name: auth-ms
     restart: on-failure
-    depends_on:
-      - orders-db
-    build: ./orders-ms
+    build: ./auth-ms
     volumes:
-      - ./orders-ms/src:/usr/src/app/src
-    command: npm run start:docker
-    environment:
-      - PORT=${ORDERS_MS_PORT}
-      - DATABASE_URL=${ORDERS_DATABASE_URL}
-      - NATS_SERVERS=${NATS_SERVERS}
-
-  # Orders DB
-  orders-db:
-    container_name: orders_database
-    image: postgres:18.3
-    restart: always
-    volumes:
-      - ./orders-ms/postgres:/var/lib/postgresql
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=${ORDERS_DB_USERNAME}
-      - POSTGRES_PASSWORD=${ORDERS_DB_PASSWORD}
-      - POSTGRES_DB=${ORDERS_DB_NAME}
-
-  # Payments MS
-  payments-ms:
-    container_name: payments-ms
-    restart: on-failure
-    build: ./payments-ms
-    volumes:
-      - ./payments-ms/src:/usr/src/app/src
+      - ./auth-ms/src:/usr/src/app/src
     command: npm run start:dev
-    ports:
-      - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
     environment:
-      - PORT=${PAYMENTS_MS_PORT}
+      - PORT=${AUTH_MS_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
-      - STRIPE_SECRET=${STRIPE_SECRET}
-      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
-      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
-      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+
+  # # Products MS
+  # products-ms:
+  #   container_name: products-ms
+  #   build: ./products-ms
+  #   volumes:
+  #     - ./products-ms/src:/usr/src/app/src
+  #   command: npm run start:docker
+  #   environment:
+  #     - PORT=${PRODUCTS_MS_PORT}
+  #     - NATS_SERVERS=${NATS_SERVERS}
+  #     - DATABASE_URL=${PRODUCTS_DATABASE_URL}
+  
+  # # Orders MS
+  # orders-ms:
+  #   container_name: orders-ms
+  #   restart: on-failure
+  #   depends_on:
+  #     - orders-db
+  #   build: ./orders-ms
+  #   volumes:
+  #     - ./orders-ms/src:/usr/src/app/src
+  #   command: npm run start:docker
+  #   environment:
+  #     - PORT=${ORDERS_MS_PORT}
+  #     - DATABASE_URL=${ORDERS_DATABASE_URL}
+  #     - NATS_SERVERS=${NATS_SERVERS}
+
+  # # Orders DB
+  # orders-db:
+  #   container_name: orders_database
+  #   image: postgres:18.3
+  #   restart: always
+  #   volumes:
+  #     - ./orders-ms/postgres:/var/lib/postgresql
+  #   ports:
+  #     - 5432:5432
+  #   environment:
+  #     - POSTGRES_USER=${ORDERS_DB_USERNAME}
+  #     - POSTGRES_PASSWORD=${ORDERS_DB_PASSWORD}
+  #     - POSTGRES_DB=${ORDERS_DB_NAME}
+
+  # # Payments MS
+  # payments-ms:
+  #   container_name: payments-ms
+  #   restart: on-failure
+  #   build: ./payments-ms
+  #   volumes:
+  #     - ./payments-ms/src:/usr/src/app/src
+  #   command: npm run start:dev
+  #   ports:
+  #     - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
+  #   environment:
+  #     - PORT=${PAYMENTS_MS_PORT}
+  #     - NATS_SERVERS=${NATS_SERVERS}
+  #     - STRIPE_SECRET=${STRIPE_SECRET}
+  #     - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+  #     - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
+  #     - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
