@@ -29,10 +29,11 @@ services:
     build: ./auth-ms
     volumes:
       - ./auth-ms/src:/usr/src/app/src
-    command: npm run start:dev
+    command: npm run start:docker
     environment:
       - PORT=${AUTH_MS_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
+      - DATABASE_URL=${AUTH_DATABASE_URL}
 
   # # Products MS
   # products-ms:
