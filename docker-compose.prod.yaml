@@ -11,13 +11,12 @@ services:
   # Client gateway
   client-gateway:
     container_name: client-gateway
-    restart: on-failure
-    build: ./client-gateway
+    build:
+      context: ./client-gateway
+      dockerfile: Dockerfile.prod
+    image: client-gateway-prod
     ports:
-      - ${CLIENT_GATEWAY_PORT}:3000
-    volumes:
-      - ./client-gateway/src:/usr/src/app/src
-    command: npm run start:dev
+      - ${CLIENT_GATEWAY_PORT}:${CLIENT_GATEWAY_PORT}
     environment:
       - PORT=${CLIENT_GATEWAY_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
@@ -26,10 +25,10 @@ services:
   auth-ms:
     container_name: auth-ms
     restart: on-failure
-    build: ./auth-ms
-    volumes:
-      - ./auth-ms/src:/usr/src/app/src
-    command: npm run start:docker
+    build:
+      context: ./auth-ms
+      dockerfile: Dockerfile.prod
+    image: auth-ms-prod
     environment:
       - PORT=${AUTH_MS_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
@@ -39,10 +38,11 @@ services:
   # Products MS
   products-ms:
     container_name: products-ms
-    build: ./products-ms
-    volumes:
-      - ./products-ms/src:/usr/src/app/src
-    command: npm run start:docker
+    restart: on-failure
+    build:
+      context: ./products-ms
+      dockerfile: Dockerfile.prod
+    image: products-ms-prod
     environment:
       - PORT=${PRODUCTS_MS_PORT}
       - NATS_SERVERS=${NATS_SERVERS}
@@ -52,39 +52,23 @@ services:
   orders-ms:
     container_name: orders-ms
     restart: on-failure
-    depends_on:
-      - orders-db
-    build: ./orders-ms
-    volumes:
-      - ./orders-ms/src:/usr/src/app/src
-    command: npm run start:docker
+    build: 
+      context: ./orders-ms
+      dockerfile: Dockerfile.prod
+    image: orders-ms
     environment:
       - PORT=${ORDERS_MS_PORT}
       - DATABASE_URL=${ORDERS_DATABASE_URL}
       - NATS_SERVERS=${NATS_SERVERS}
 
-  # Orders DB
-  orders-db:
-    container_name: orders_database
-    image: postgres:18.3
-    restart: always
-    volumes:
-      - ./orders-ms/postgres:/var/lib/postgresql
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_USER=${ORDERS_DB_USERNAME}
-      - POSTGRES_PASSWORD=${ORDERS_DB_PASSWORD}
-      - POSTGRES_DB=${ORDERS_DB_NAME}
-
   # Payments MS
   payments-ms:
     container_name: payments-ms
     restart: on-failure
-    build: ./payments-ms
-    volumes:
-      - ./payments-ms/src:/usr/src/app/src
-    command: npm run start:dev
+    build: 
+      context: ./payments-ms
+      dockerfile: Dockerfile.prod
+    image: payments-ms-prod
     ports:
       - ${PAYMENTS_MS_PORT}:${PAYMENTS_MS_PORT}
     environment:

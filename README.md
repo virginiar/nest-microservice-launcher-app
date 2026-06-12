@@ -35,6 +35,24 @@ $ hookdeck listen 3003 stripe --path /payments/webhook
 $ docker compose up --build
 ```
 
+## Pasos para producción
+
+1. Clonar el repositorio
+
+2. Crear un .env basado en el .env.template
+
+3. Construir las imágenes con el comando:
+
+```bash
+$ docker compose -f docker-compose.prod.yaml build
+```
+
+4. Levantar los contenedores con el comando:
+
+```bash
+$ docker compose -f docker-compose.prod.yaml up -d
+```
+
 ## Aspectos estudiados
 
 En este repositorio se trabajan los siguientes aspectos de Nest con microservicios:
